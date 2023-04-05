@@ -1,27 +1,37 @@
-<!--<div class="spinner-container" *ngIf="dataSource.loading$ | async">-->
-<!--  <mat-spinner></mat-spinner>-->
-<!--</div>-->
-<table mat-table [dataSource]="exchangeRatesData" class="mat-elevation-z8 mt-4">
-  <ng-container matColumnDef="Symbol waluty">
-    <th mat-header-cell *matHeaderCellDef>Symbol waluty</th>
+<div class="spinner-container d-flex justify-content-center w-100" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+       class="mat-elevation-z8">
+
+  <ng-container matColumnDef="symbol">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by symbol">
+      Symbol waluty
+    </th>
     <td mat-cell *matCellDef="let element"> {{element.code}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="Waluta">
-    <th mat-header-cell *matHeaderCellDef>Waluta</th>
+  <ng-container matColumnDef="currency">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by waluta">
+      Waluta
+    </th>
     <td mat-cell *matCellDef="let element"> {{element.currency}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="Kurs waluty">
-    <th mat-header-cell *matHeaderCellDef>Kurs waluty</th>
+  <ng-container matColumnDef="exchange">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by weight">
+      Kurs waluty
+    </th>
     <td mat-cell *matCellDef="let element"> {{element.mid}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
 <mat-paginator [length]="exchangeRatesData.length"
-              [pageSize]="10"
+              [pageSize]="5"
               [pageSizeOptions]="[5, 10, 25, 100]"
               aria-label="Select page">
 </mat-paginator>

@@ -14,6 +14,5 @@ export class AppComponent implements OnInit {
 
   changeTheme(themeColor: string) {
     this.theme = themeColor === 'dark' ? false : true;
-    console.log(this.theme)
   }
 }
