@@ -6,11 +6,26 @@
       </span>
       Clear
     </button>
-    <mat-form-field appearance="fill">
-      <input matInput [matDatepicker]="picker">
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+    <div class="datapicker">
+      <form [formGroup]="formDate" (ngSubmit)="onFormSubmit()">
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="date"
+            (dateChange)="handeDate($event)"
+          >
+          <div
+            *ngIf="formDate.controls['date'].touched && formDate.controls['date'].invalid"
+            class="validation"
+          >
+            <small *ngIf="formDate.controls['date'].errors">Write date in format YYYY-MM-DD</small>
+          </div>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </form>
+    </div>
   </div>
-  <app-table [resetFilters]="resetFilters"></app-table>
+  <app-table [resetFilters]="resetFilters" [currentDate]="currentDate"></app-table>
 </section>

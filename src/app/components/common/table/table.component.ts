@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { catchError, finalize, Subscription, tap, throwError } from "rxjs";
 import {
   Rate
@@ -12,16 +12,18 @@ import {MatSort, Sort} from "@angular/material/sort";
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class TableComponent implements OnInit {
   public exchangeRatesDataList$: Subscription = new Subscription();
-  public exchangeRatesData: Rate[] = [];
+  public exchangeCurrentDayRatesDataList$: Subscription = new Subscription();
   public dataSource: MatTableDataSource<Rate>;
   public displayedColumns: string[] = ['symbol', 'currency', 'exchange'];
 
   @Input() resetFilters: boolean;
+  @Input() currentDate: string;
   @Output() updateResetFilter = new EventEmitter<string>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null;
@@ -34,7 +36,10 @@ export class TableComponent implements OnInit {
   ) { }
 
   ngOnChanges($event: any): void {
-    if ($event.resetFilters.currentValue) {
+    if ($event?.currentDate?.currentValue) {
+      this.loadExchangeCurrentDateCourseData(this.currentDate);
+    }
+    if ($event?.resetFilters?.currentValue) {
       this.loadExchangeCourseData();
     }
   }
@@ -45,13 +50,14 @@ export class TableComponent implements OnInit {
 
   ngOnDestroy() {
     this.exchangeRatesDataList$.unsubscribe();
+    this.exchangeCurrentDayRatesDataList$.unsubscribe();
   }
 
   loadExchangeCourseData():void {
     this.loading = true;
     this.exchangeRatesDataList$ = this.exchangeRatesService.getExchangeRatesData().pipe(
-      tap(exchangeRatesData => {
-        this.dataSource = new MatTableDataSource(exchangeRatesData[0].rates);
+      tap(data => {
+        this.dataSource = new MatTableDataSource(data[0].rates);
       }),
       catchError(err => {
         return throwError(err)
@@ -64,15 +70,30 @@ export class TableComponent implements OnInit {
     ).subscribe();
   }
 
+  loadExchangeCurrentDateCourseData(date):void {
+    this.exchangeCurrentDayRatesDataList$ = this.exchangeRatesService.getExchangeRatesFoExactData(date)
+      .pipe(
+        tap(data=> {
+          this.dataSource = new MatTableDataSource(data[0].rates);
+          console.log(this.dataSource)
+        }),
+        catchError(err => {
+          return throwError(err)
+        }),
+        finalize(() => {
+          this.loading = false;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        })
+      )
+      .subscribe()
+  }
+
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction} ended`)
     } else {
       this._liveAnnouncer.announce(`Sorting cleared`)
     }
-  }
-
-  public handleFilters(): void {
-    this.resetFilters = true;
   }
 }

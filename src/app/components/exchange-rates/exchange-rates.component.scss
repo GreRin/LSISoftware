@@ -6,30 +6,28 @@
     'opsz' 48
 }
 
-::ng-deep .mat-form-field > div, ::ng-deep .mat-form-field-flex {
-  height: 45px;
-  adding: 0.75em;
-}
-
+//::ng-deep .mat-form-field > div, ::ng-deep .mat-form-field-flex {
+//  height: 45px;
+//  adding: 0.75em;
+//}
+//
 ::ng-deep .mat-form-field-infix {
   display: inline-flex !important;
 }
-
-::ng-deep .mat-form-field-wrapper {
-  padding: 0;
-}
-
-::ng-deep .mat-form-field-subscript-wrapper {
-  border: none;
-}
-
-::ng-deep .mat-form-field-infix, ::ng-deep .mat-form-field-label-wrapper {
-  padding: 0;
-  border: none;
-  margin: 0;
-  transform: translateY(-10px);
-}
-
-::ng-deep .mat-form-field-underline {
-  display: none;
-}
+//
+//::ng-deep .mat-form-field-wrapper {
+//  padding: 0;
+//}
+//
+//::ng-deep .mat-form-field-subscript-wrapper {
+//  border: none;
+//}
+//
+//::ng-deep .mat-form-field-infix, ::ng-deep .mat-form-field-label-wrapper {
+//  padding: 0;
+//  border: none;
+//}
+//
+//::ng-deep .mat-form-field-underline {
+//  display: none;
+//}

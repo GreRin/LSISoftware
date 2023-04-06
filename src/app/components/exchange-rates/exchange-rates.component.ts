@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ExchangeRatesService} from "../../backend-bridge/controllers/exchange-rates/service/exchange-rates.service";
-import * as buffer from "buffer";
+import {FormControl, FormGroup} from "@angular/forms";
+import { onDateValidation } from '../../shared/helpers';
 
 @Component({
   selector: 'app-exchange-rates',
@@ -9,17 +9,31 @@ import * as buffer from "buffer";
 })
 export class ExchangeRatesComponent implements OnInit {
   public resetFilters: boolean = false;
+  public formDate: FormGroup;
+  public currentDate: string;
 
   constructor(
-    private exchangeRatesService: ExchangeRatesService,
-  ) { }
-
-  ngOnInit(): void {
-
+  ) {
+    this.formDate = new FormGroup({
+      date: new FormControl('')
+    });
   }
 
-  public handleFilters() {
+  ngOnInit(): void {
+  }
+
+  public handleFilters(): void {
     this.resetFilters = !this.resetFilters;
   }
 
+  public onFormSubmit():void {
+    if (this.formDate.invalid) {
+      return;
+    }
+    this.currentDate = onDateValidation(this.formDate.value.date);
+  }
+
+  public handeDate(event: any): void {
+    this.currentDate = onDateValidation(event.target.value);
+  }
 }
