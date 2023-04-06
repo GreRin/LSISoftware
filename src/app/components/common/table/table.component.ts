@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { catchError, finalize, Subscription, tap, throwError } from "rxjs";
 import {
   Rate
@@ -14,11 +14,15 @@ import {MatSort, Sort} from "@angular/material/sort";
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss']
 })
+
 export class TableComponent implements OnInit {
   public exchangeRatesDataList$: Subscription = new Subscription();
   public exchangeRatesData: Rate[] = [];
   public dataSource: MatTableDataSource<Rate>;
   public displayedColumns: string[] = ['symbol', 'currency', 'exchange'];
+
+  @Input() resetFilters: boolean;
+  @Output() updateResetFilter = new EventEmitter<string>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null;
   @ViewChild(MatSort) sort: MatSort;
@@ -28,6 +32,12 @@ export class TableComponent implements OnInit {
     private exchangeRatesService: ExchangeRatesService,
     public _liveAnnouncer: LiveAnnouncer,
   ) { }
+
+  ngOnChanges($event: any): void {
+    if ($event.resetFilters.currentValue) {
+      this.loadExchangeCourseData();
+    }
+  }
 
   ngOnInit(): void {
     this.loadExchangeCourseData();
@@ -60,5 +70,9 @@ export class TableComponent implements OnInit {
     } else {
       this._liveAnnouncer.announce(`Sorting cleared`)
     }
+  }
+
+  public handleFilters(): void {
+    this.resetFilters = true;
   }
 }

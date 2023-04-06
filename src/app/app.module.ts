@@ -36,7 +36,7 @@ import {MatSortModule} from '@angular/material/sort';
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatSortModule
+    MatSortModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

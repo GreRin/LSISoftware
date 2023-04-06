@@ -1,11 +1,16 @@
 <section>
-  <div class="d-inline-flex justify-content-between table-bar">
-    <button mat-raised-button (click)="clearFilter()">
+  <div class="d-inline-flex justify-content-between table-bar w-100">
+    <button mat-raised-button (click)="handleFilters()">
       <span class="material-symbols-outlined">
         filter_alt_off
       </span>
       Clear
     </button>
+    <mat-form-field appearance="fill">
+      <input matInput [matDatepicker]="picker">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
   </div>
-  <app-table></app-table>
+  <app-table [resetFilters]="resetFilters"></app-table>
 </section>
